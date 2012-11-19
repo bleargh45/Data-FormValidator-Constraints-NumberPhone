@@ -1,0 +1,25 @@
+---
+abstract: 'Data constraints, using Number::Phone'
+author:
+  - 'Graham TerMarsch (cpan@howlingfrog.com)'
+build_requires:
+  Test::More: 0
+configure_requires:
+  Module::Build: 0.38
+dynamic_config: 1
+generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.120921'
+license: artistic_2
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Data-FormValidator-Constraints-NumberPhone
+provides:
+  Data::FormValidator::Constraints::NumberPhone:
+    file: lib/Data/FormValidator/Constraints/NumberPhone.pm
+    version: 0.01
+requires:
+  Data::FormValidator: 4
+  Number::Phone: 0
+resources:
+  license: http://opensource.org/licenses/artistic-license-2.0.php
+version: 0.01
