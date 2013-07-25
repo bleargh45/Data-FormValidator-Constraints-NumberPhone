@@ -1,6 +1,8 @@
 Revision history for Data::FormValidator::Constraints::NumberPhone;
 
-0.02    ??
+0.02    Thu Jul 25 2013 13:38 PDT 2013
+    - add "FV_telephone()", to allow for phone number verification for *any*
+      country, not just Canada and the US.
 
 0.01    Mon Nov 19 2012 10:30 PST 2012
     - initial release

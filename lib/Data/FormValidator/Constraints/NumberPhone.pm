@@ -16,26 +16,29 @@ use base qw(Exporter);
 use vars qw(@EXPORT_OK);
 our @EXPORT_OK = qw(
     FV_american_phone
+    FV_telephone
 );
 
 ###############################################################################
 # Subroutine:   FV_american_phone()
 ###############################################################################
 # Creates a constraint closure that returns true if the constrained value
-# appears to be a valid North American telephone number.
-#
-# Accepts an optional list of Country Codes, specifying which countries that
-# participate in the North American Numbering Plan (NANP) should be considered
-# valid.  By default, only Canada and the United States are considered valid.
+# appears to be a valid North American telephone number (Canada, or US)
 sub FV_american_phone {
+    return FV_telephone(qw( CA US ));
+}
+
+###############################################################################
+# Subroutine:   FV_telephone(@countries)
+# Creates a constraint closure that returns true if the constrained value
+# appears to be a valid telephone number.
+#
+# REQUIRES a list of Country Codes (e.g. "CA", "US", "UK"), to specify which
+# countries should be considered valid.  By default, *NO* countries are
+# considered valid (and thus, no numbers are considered valid by default).
+sub FV_telephone {
     my @countries = @_;
 
-    # Default set of countries to be considered "North America"; Canada, US.
-    unless (@countries) {
-        @countries = qw( CA US );
-    }
-
-    # Return closure.
     return sub {
         my $dfv = shift;
         my $val = $dfv->get_current_constraint_value;
@@ -43,15 +46,18 @@ sub FV_american_phone {
         # Add leading "+" if it looks like we've got a long distance prefix
         $val = "+$val" if ($val =~ /^\s*1/);
 
-        # Try to instantiate this as a North American phone number; if it
-        # doesn't come back, its not a valid number.
-        my $phone = Number::Phone->new(US => $val);
-        return 0 unless (defined $phone);
+        # Try to instantiate the telephone number using any of the provided
+        # Countries.
+        foreach my $country (@countries) {
+            my $phone = Number::Phone->new($country => $val);
+            next unless $phone;
+            next unless $phone->is_valid;
+            next unless (uc($phone->country) eq uc($country));
+            return 1;
+        }
 
-        # Verify that its a North American number; Canada, US only.
-        return 1 if (grep { $_ eq $phone->country } @countries);
         return 0;
-    }
+    };
 }
 
 1;
@@ -81,12 +87,16 @@ C<Data::FormValidator> and C<Number::Phone>.
 =item B<FV_american_phone()>
 
 Creates a constraint closure that returns true if the constrained value
-appears to be a valid North American telephone number.
+appears to be a valid North American telephone number (Canada, or US)
 
-Accepts an optional list of Country Codes, specifying which countries that
-participate in the North American Numbering Plan (NANP) should be
-considered valid. By default, only Canada and the United States are
-considered valid.
+=item B<FV_telephone(@countries)>
+
+Creates a constraint closure that returns true if the constrained value
+appears to be a valid telephone number.
+
+REQUIRES a list of Country Codes (e.g. "CA", "US", "UK"), to specify which
+countries should be considered valid. By default, *NO* countries are
+considered valid (and thus, no numbers are considered valid by default).
 
 =back
 
