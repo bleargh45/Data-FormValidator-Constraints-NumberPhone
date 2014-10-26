@@ -1,6 +1,7 @@
 Revision history for Data::FormValidator::Constraints::NumberPhone;
 
-0.03    ????
+0.03    Sat Oct 25 2014 22:29 PDT 2014
+    - test restructuring, to provide better coverage
 
 0.02    Thu Jul 25 2013 13:38 PDT 2013
     - add "FV_telephone()", to allow for phone number verification for *any*
