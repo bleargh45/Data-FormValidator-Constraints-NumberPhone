@@ -32,6 +32,20 @@ subtest 'test_telephone' => sub {
     ok !$is_telephone_valid->('us' => '999-999-9999'),  'IN-valid US number';
     ok  $is_telephone_valid->('uk' => '+442087712924'), 'valid UK number';
     ok !$is_telephone_valid->('uk' => '+1-604-555-1212'),  'Canadian number not valid in UK';
+
+    ###########################################################################
+    subtest 'without country' => sub {
+        my $results = Data::FormValidator->check( {
+            num => '604-555-1212',
+        }, {
+            required => [qw( num )],
+            constraint_methods => {
+                num => FV_telephone(),
+            }
+        } );
+        my $valid = $results->valid;
+        ok !$valid->{num}, 'cannot valid phone number w/o country';
+    };
 };
 
 ###############################################################################

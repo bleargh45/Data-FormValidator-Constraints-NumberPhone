@@ -43,6 +43,9 @@ sub FV_telephone {
         my $dfv = shift;
         my $val = $dfv->get_current_constraint_value;
 
+        # No country?  Not valid; you didn't tell us what to validate it for.
+        return 0 unless @countries;
+
         # Add leading "+" if it looks like we've got a long distance prefix
         $val = "+$val" if ($val =~ /^\s*1/);
 
