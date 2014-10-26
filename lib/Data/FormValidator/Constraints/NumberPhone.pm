@@ -55,7 +55,7 @@ sub FV_telephone {
             my $phone = Number::Phone->new($country => $val);
             next unless $phone;
             next unless $phone->is_valid;
-            next unless (uc($phone->country) eq uc($country));
+            next unless ($phone->country && (uc($phone->country) eq uc($country)));
             return 1;
         }
 
