@@ -11,63 +11,52 @@ use Data::FormValidator::Constraints::NumberPhone qw(
 
 ###############################################################################
 subtest 'test_telephone' => sub {
-    my $results = Data::FormValidator->check( {
-        valid_ca   => '604-555-1212',
-        invalid_ca => '917-555-1212',   # valid, but in New York, not Canada
-        valid_uk   => '+442087712924',
-        invalid_uk => '+1-604-555-1212',
-        invalid    => '000-000-0000',
-    }, {
-        optional => [ qw(
-            valid_ca valid_uk
-            invalid
-        ) ],
-        constraint_methods => {
-            valid_ca   => FV_telephone(qw( ca )),
-            invalid_ca => FV_telephone(qw( ca)),
-            valid_uk   => FV_telephone(qw( uk )),
-            invalid_uk => FV_telephone(qw( uk )),
-        },
-    } );
+    my $is_telephone_valid = sub {
+        my $country = shift;
+        my $num     = shift;
+        my $results = Data::FormValidator->check( {
+            num => $num,
+        }, {
+            required => [qw( num )],
+            constraint_methods => {
+                num => FV_telephone($country),
+            },
+        } );
+        my $valid = $results->valid;
+        return $valid->{num};
+    };
 
-    my $valid = $results->valid;
-    ok $valid->{valid_ca}, 'valid Canadian phone';
-    ok $valid->{valid_uk}, 'valid phone in the United Kingdom';
-    ok !$valid->{invalid_ca}, 'invalid; not a Canadian phone number';
-    ok !$valid->{invalid_uk}, 'invalid; not a phone in the United Kingdom';
+    ok  $is_telephone_valid->('ca' => '604.555.1212'),  'valid Canadian number';
+    ok !$is_telephone_valid->('ca' => '915-555-1212'),  'US number not valid in Canada';
+    ok  $is_telephone_valid->('us' => '915-555-1212'),  'valid US number';
+    ok !$is_telephone_valid->('us' => '999-999-9999'),  'IN-valid US number';
+    ok  $is_telephone_valid->('uk' => '+442087712924'), 'valid UK number';
+    ok !$is_telephone_valid->('uk' => '+1-604-555-1212'),  'Canadian number not valid in UK';
 };
 
 ###############################################################################
 subtest 'test_american_phone' => sub {
-    my $results = Data::FormValidator->check( {
-        valid_phone            => '604-555-1212',
-        valid_w_prefix         => '+1-250-555-1212',
-        also_valid             => '1-778-555-1212',
-        invalid_out_of_country => '441-555-1212',
-        not_a_phone            => 'not a phone number',
-        invalid                => '000-000-0000',
-    }, {
-        optional => [ qw(
-            valid_phone valid_w_prefix also_valid
-            invalid_out_of_country not_a_phone invalid
-        ) ],
-        constraint_methods => {
-            valid_phone            => FV_american_phone(),
-            valid_w_prefix         => FV_american_phone(),
-            also_valid             => FV_american_phone(),
-            invalid_out_of_country => FV_american_phone(),
-            not_a_phone            => FV_american_phone(),
-            invalid                => FV_american_phone(),
-        },
-    } );
+    my $is_american_phone_valid = sub {
+        my $num     = shift;
+        my $results = Data::FormValidator->check( {
+            num => $num,
+        }, {
+            required => [qw( num )],
+            constraint_methods => {
+                num => FV_american_phone(),
+            },
+        } );
+        my $valid = $results->valid;
+        return $valid->{num};
+    };
 
-    my $valid = $results->valid;
-    ok $valid->{valid_phone},          'valid North American phone';
-    ok $valid->{valid_w_prefix},       'valid North American phone, w/prefix';
-    ok $valid->{also_valid},           'another valid North American phone';
-    ok !$valid->{invalid_out_of_country}, 'invalid; not in default countries';
-    ok !$valid->{not_a_phone},            'invalid; not a telephone number';
-    ok !$valid->{invalid}, 'invalid; numbers, but not a telephone number';
+    ok  $is_american_phone_valid->('604-555-1212'),       'valid North American phone number';
+    ok  $is_american_phone_valid->('+1-250-555-1212'),    'valid North American phone number, w/prefix';
+    ok  $is_american_phone_valid->('1-778-555-1212'),     'valid North American mobile number';
+    ok !$is_american_phone_valid->('441-555-1212'),       'invalid; not in a North American country';
+    ok !$is_american_phone_valid->('not a phone number'), 'invalid; not a phone number';
+    ok !$is_american_phone_valid->('000-000-000'),        'invalid; invalid number';
+    ok !$is_american_phone_valid->('+442087712924'),      'invalid; not a NANP number';
 };
 
 ###############################################################################
