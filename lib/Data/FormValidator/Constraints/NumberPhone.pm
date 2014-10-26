@@ -52,10 +52,10 @@ sub FV_telephone {
         # Try to instantiate the telephone number using any of the provided
         # Countries.
         foreach my $country (@countries) {
-            my $phone = Number::Phone->new($country => $val);
-            next unless $phone;
-            next unless $phone->is_valid;
-            next unless ($phone->country && (uc($phone->country) eq uc($country)));
+            my $ph = Number::Phone->new($country => $val);
+            next unless $ph;
+            next unless $ph->is_valid;
+            next unless ($ph->country && (uc($ph->country) eq uc($country)));
             return 1;
         }
 
