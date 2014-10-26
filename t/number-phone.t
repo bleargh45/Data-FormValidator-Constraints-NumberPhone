@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More;
 use Data::FormValidator;
 use Data::FormValidator::Constraints::NumberPhone qw(
     FV_american_phone
@@ -10,7 +10,7 @@ use Data::FormValidator::Constraints::NumberPhone qw(
 );
 
 ###############################################################################
-test_telephone: {
+subtest 'test_telephone' => sub {
     my $results = Data::FormValidator->check( {
         valid_ca   => '604-555-1212',
         invalid_ca => '917-555-1212',   # valid, but in New York, not Canada
@@ -35,10 +35,10 @@ test_telephone: {
     ok $valid->{valid_uk}, 'valid phone in the United Kingdom';
     ok !$valid->{invalid_ca}, 'invalid; not a Canadian phone number';
     ok !$valid->{invalid_uk}, 'invalid; not a phone in the United Kingdom';
-}
+};
 
 ###############################################################################
-test_american_phone: {
+subtest 'test_american_phone' => sub {
     my $results = Data::FormValidator->check( {
         valid_phone            => '604-555-1212',
         valid_w_prefix         => '+1-250-555-1212',
@@ -68,4 +68,7 @@ test_american_phone: {
     ok !$valid->{invalid_out_of_country}, 'invalid; not in default countries';
     ok !$valid->{not_a_phone},            'invalid; not a telephone number';
     ok !$valid->{invalid}, 'invalid; numbers, but not a telephone number';
-}
+};
+
+###############################################################################
+done_testing();
