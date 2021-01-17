@@ -1,6 +1,0 @@
-Build
-_build/
-\.prove
-\.git/
-\..*\.sw[a-z]
-blib/

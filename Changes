@@ -1,5 +1,8 @@
 Revision history for Data::FormValidator::Constraints::NumberPhone;
 
+{{$NEXT}}
+    - switch to Dist::Zilla for release management
+
 0.03    Sat Oct 25 2014 22:29 PDT 2014
     - test restructuring, to provide better coverage
 
