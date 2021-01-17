@@ -87,12 +87,12 @@ C<Data::FormValidator> and C<Number::Phone>.
 
 =over
 
-=item B<FV_american_phone()>
+=item FV_american_phone()
 
 Creates a constraint closure that returns true if the constrained value
 appears to be a valid North American telephone number (Canada, or US)
 
-=item B<FV_telephone(@countries)>
+=item FV_telephone(@countries)
 
 Creates a constraint closure that returns true if the constrained value
 appears to be a valid telephone number.

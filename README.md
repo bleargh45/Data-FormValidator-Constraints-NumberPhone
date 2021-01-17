@@ -20,12 +20,12 @@ This module implements methods to help validate data using
 
 # METHODS
 
-- **FV\_american\_phone()**
+- FV\_american\_phone()
 
     Creates a constraint closure that returns true if the constrained value
     appears to be a valid North American telephone number (Canada, or US)
 
-- **FV\_telephone(@countries)**
+- FV\_telephone(@countries)
 
     Creates a constraint closure that returns true if the constrained value
     appears to be a valid telephone number.
