@@ -44,5 +44,5 @@ Copyright (C) 2012, Graham TerMarsch.  All Rights Reserved.
 
 # SEE ALSO
 
-[Data::FormValidator](https://metacpan.org/pod/Data%3A%3AFormValidator),
-[Number::Phone](https://metacpan.org/pod/Number%3A%3APhone).
+- [Data::FormValidator](https://metacpan.org/pod/Data%3A%3AFormValidator)
+- [Number::Phone](https://metacpan.org/pod/Number%3A%3APhone)
